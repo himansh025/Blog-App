@@ -38,6 +38,16 @@ export class AuthService{
         }
     }
 
+    async loginAccount ({email, password}){
+        try{
+            return await this.account.createEmailSession(email, password)
+        }
+        catch(error){
+            throw error
+        }
+        return null
+    }
+
     async logoutAccount (accountID) {
         try{
             let user = await this.account.deleteSession('current')
