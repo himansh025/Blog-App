@@ -1,15 +1,34 @@
-import React from 'react'
-import service from './appwrite/config';
-import authService from './appwrite/auth'
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { appwriteBucketID } from "./conf/conf";
+import authService from "./appwrite/auth";
+import service from "./appwrite/config";
+import { login } from "./store/authSlice";
 
 function App() {
-    // authService.loginAccount({email: 'nooralamf42@gmail.com', password: "meonly42@"})
-    //authService.getAccount()
-  //service.createPost({title: 'noor', content: "helloooooo hshfskjf", featuredImage: 'none', userID : '1'})
-  service.deletePost("65af58ce5dcb08e9ec43")
+  //  authService.createAccount({email: 'test2@gmail.com', password: '1meonlY42', name: 'test2'})
+  // service.createPost({
+  //   content: 'hello hi bye bye',
+  //   name: 'my post',
+  //   imageURL: 'noimage.com'
+  // })
+  const [loader, setLoader] = useState(true);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    authService
+      .isLoggedIn()
+      .then((user) => dispatch(login({userData: user})))
+      .finally(setLoader(false));
+  });
+
+  useSelector(state=>console.log(state))
+
   return (
-    <div className='flex h-screen justify-center items-center bg-red-100 text-5xl'>Quick React Setup with Tailwind</div>
-  )
+    <div className="flex h-screen justify-center items-center bg-red-100 text-5xl">
+      Quick React Setup with Tailwind
+    </div>
+  );
 }
 
-export default App
+export default App;

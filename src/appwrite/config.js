@@ -1,91 +1,173 @@
-import { Client, Databases, Storage, ID, Query } from "appwrite";
-import conf from "../../conf/conf";
+import { Client, Storage, Databases, Query, ID} from "appwrite";
+import { appwriteBucketID,appwriteCollectionID,appwriteDatabaseID,appwriteProjectID,appwriteProjectURL} from "../conf/conf";
 
-let {appwriteDatabaseID, appwriteUrl, appwriteID, appwriteCollectionID, appwriteBucketID} = conf
+class Service {
+  client = new Client();
+  database;
+  bucket;
 
-export class Service{
-    client = new Client
-    database ;
-    bucket ;
+  constructor() {
+    this.client.setEndpoint(appwriteProjectURL).setProject(appwriteProjectID);
+    this.database = new Databases(this.client);
+    this.bucket = new Storage(this.client);
+  }
 
-    constructor(){
-        this.client
-            .setEndpoint(appwriteUrl)
-            .setProject(appwriteID)
-        this.database = new Databases(this.client)
-        this.bucket = new Storage(this.client)
+  // to create post
+
+  async createPost({ content, name, featuredImage, slug, status, userID }) {
+    try {
+      return await this.database.createDocument(
+        appwriteDatabaseID,
+        appwriteCollectionID,
+        slug,
+        {
+          name,
+          content,
+          featuredImage,
+          status,
+          userID,
+        }
+      );
+    } catch (error) {
+      console.error("error while creating post : ", error);
+      throw error;
     }
+  }
 
-    async createPost(data){
-       try {
-        return await this.database.createDocument(appwriteDatabaseID, appwriteCollectionID,ID.unique(), data)
-       } catch (error) {
+
+  // to update post
+
+  async updatePost(slug, { content, name, featuredImage, status}) {
+    try {
+      await this.database.updateDocument(
+        appwriteDatabaseID,
+        appwriteCollectionID,
+        slug,
+        {
+          content,
+          name,
+          featuredImage,
+          status,
+        }
+      );
+    } catch (error) {
+      console.error("error while updating post : ", error);
+      throw error;
+    }
+  }
+
+
+  // to get post
+
+  async getPost(slug){
+    try {
+        return await this.database.getDocument(
+            appwriteDatabaseID,
+            appwriteCollectionID,
+            slug
+        )
+    } catch (error) {
+        console.error('error while getting post : ', error)
         throw error
-       }
     }
+  }
 
-    
-    async updatePost(slug, data){
-        try {
-            this.database.updateDocument(appwriteDatabaseID, appwriteCollectionID, slug, data)
-        } catch (error) {
-            console.log("error in updating post ", error )
-        }
-    }
-    
-    async getPost(postId){
-        try {
-            let res =  await this.database.getDocument(appwriteDatabaseID, appwriteCollectionID, postId)
-            let post = await res
-            return post
-        } catch (error) {
-            throw error
-        }
-    }
 
-    async getPosts(queries = [Query.equal("status",'active')]){
-        try {
-            return await this.database.listDocuments(appwriteDatabaseID, appwriteCollectionID, queries)           
-        } catch (error) {
-            console.log("error while getting post ", error)
-        }
-    }
+  // to get multiple posts
 
-    async deletePost(postId){
-        try {
-            return await this.database.deleteDocument(appwriteDatabaseID, appwriteCollectionID, postId
-                )
-        } catch (error) {
-            throw error
-        }
+  async getPosts(queries = Query.equal('status', true)){
+    try {
+        return await this.database.listDocuments(
+            appwriteDatabaseID,
+            appwriteCollectionID,
+            queries
+        )
+    } catch (error) {
+        console.error('error while getting posts : ', error)
     }
+  }
 
-    async uploadFile(file){
-        try {
-            return this.bucket.updateFile(appwriteBucketID, ID.unique(), file)
-        } catch (error) {
-            console.log("error while uploading file ", error)
-            return false
-        }
-    }
 
-    async deleteFile(fileID){
-        try {
-            await this.bucket.deleteFile(appwriteBucketID, fileID)
-        } catch (error) {
-            console.log('error while deleting file ', error)
-            return false
-        }
-    }
+  // to delete post
 
-    async previewFile(fileID){
-        try {
-            await this.bucket.getFilePreview(appwriteBucketID, fileID)
-        } catch (error) {
-            console.log("error while previewing file ", error)
-        }
+  async deletePost(slug){
+    try {
+        return this.database.deleteDocument(
+            appwriteDatabaseID,
+            appwriteCollectionID,
+            slug
+        )
+    } catch (error) {
+        console.error("error while deleting post : ", error)
+        throw error
     }
+  }
+
+
+  // to upload file
+
+  async uploadFile(file){
+    try {
+        return await this.bucket.createFile(
+            appwriteBucketID,
+            ID.unique(),
+            file
+        )
+    } catch (error) {
+        console.log('error while uploading file : ', error)
+        throw error
+    }
+  }
+
+
+  // to get file
+
+  async getFile(fileID){
+    try {
+        return await this.bucket.getFile(
+            appwriteBucketID,
+            fileID
+        )
+    } catch (error) {
+        console.log('error while getting file : ', error)
+        throw error
+    }
+  }
+
+
+  // to get preview file
+
+  async getPreviewFile(fileID){
+    try {
+        return await this.bucket.getFilePreview(
+            appwriteBucketID,
+            fileID
+        )
+    } catch (error) {
+        console.log('error while getting preview file : ', error)
+        throw error
+    }
+  }
+
+  // to delete file
+
+  async deleteFile(fileID){
+    try {
+        return await this.bucket.deleteFile(
+            appwriteBucketID,
+            fileID
+        )
+    } catch (error) {
+        console.log('error while deleting file : ', error)
+        throw error
+    }
+  }
 }
 
-const service = new Service()
-export default service
+
+    
+
+
+
+const service = new Service();
+export default service;
