@@ -21,7 +21,6 @@ class AuthService {
             })
         } catch (error) {
             console.error('error while creating account : ', error)
-            throw error
         }
         return null
     }
@@ -31,10 +30,8 @@ class AuthService {
             return await this.account.get()
         } catch (error) {
             console.error('error while getting user : ', error)
-            throw error
         }
         return null
-        
     }
 
     async loginUser({email, password}){
@@ -42,7 +39,6 @@ class AuthService {
             return await this.account.createEmailSession(email, password)
         } catch (error) {
             console.error("error while login : ", error)
-            throw error
         }
         return null
     }
@@ -53,7 +49,6 @@ class AuthService {
         } catch (error) {
             console.error('error while logout : ', error)
         }
-        return null
     }
 }
 
