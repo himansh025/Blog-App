@@ -51,7 +51,7 @@ function Header() {
             (link) =>
               link.visible && (
                 <li key={link.name}>
-                  <Button>{link.name}</Button>
+                  <Link to={link.slug}><Button>{link.name}</Button></Link>
                 </li>
               )
           )}
