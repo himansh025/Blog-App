@@ -14,14 +14,14 @@ class Service {
 
   // to create post
 
-  async createPost({ content, name, featuredImage, slug, status, userID }) {
+  async createPost(slug,{ content, title, featuredImage , status, userID }) {
     try {
       return await this.database.createDocument(
         appwriteDatabaseID,
         appwriteCollectionID,
         slug,
         {
-          name,
+          title,
           content,
           featuredImage,
           status,
@@ -30,14 +30,13 @@ class Service {
       );
     } catch (error) {
       console.error("error while creating post : ", error);
-      throw error;
     }
   }
 
 
   // to update post
 
-  async updatePost(slug, { content, name, featuredImage, status}) {
+  async updatePost(slug, { content, title, featuredImage, status}) {
     try {
       await this.database.updateDocument(
         appwriteDatabaseID,
@@ -45,7 +44,7 @@ class Service {
         slug,
         {
           content,
-          name,
+          title,
           featuredImage,
           status,
         }

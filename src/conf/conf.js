@@ -6,6 +6,7 @@ const config = {
     appwriteDatabaseID : String(import.meta.env.VITE_APPWRITE_DB_ID),
     appwriteCollectionID : String(import.meta.env.VITE_APPWRITE_COLLECTION_ID),
     appwriteBucketID : String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
+    tinyMCEAPI : String(import.meta.env.VITE_TINYMCE_API)
 }
 
-export const {appwriteBucketID, appwriteCollectionID, appwriteDatabaseID, appwriteProjectID, appwriteProjectURL} = config
+export const {appwriteBucketID, appwriteCollectionID, appwriteDatabaseID, appwriteProjectID, appwriteProjectURL, tinyMCEAPI} = config
