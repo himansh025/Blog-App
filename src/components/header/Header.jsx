@@ -5,8 +5,6 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import authService from "../../appwrite/auth";
 import { login, logout } from "../../store/authSlice";
-import Protected from "../Protected";
-import PostForm from "../post-form/PostForm";
 
 function Header() {
   let isLogged = useSelector((state) => state.status);
@@ -71,9 +69,7 @@ function Header() {
             <Button>Logout</Button>
           </li>
         </ul>
-      </Container>
-      <Protected/>
-      <PostForm/>
+      </Container> 
     </nav>
   );
 }

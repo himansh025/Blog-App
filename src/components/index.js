@@ -4,6 +4,7 @@ import Header from "./header/Header";
 import Button from "./button/Button";
 import Logo from "./logo/Logo";
 import Input from "./Input";
-import RTE from "./RTE"
+import RTE from "./RTE";
+import PostCard from "./postCard";
 
-export {Footer, Header, Container, Button, Logo, Input, RTE}
+export {Footer, Header, Container, Button, Logo, Input, RTE, PostCard}

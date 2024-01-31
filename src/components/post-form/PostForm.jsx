@@ -6,10 +6,11 @@ import { useCallback, useEffect } from "react";
 import { Input, Button, Container, RTE } from "../index.js";
 
 export default function PostForm({ postData }) {
+  console.log(postData)
   const navigate = useNavigate();
   const { watch, control, getValues, setValue, register, handleSubmit } =
     useForm({
-        initialValue : 
+        defaultValues : 
         {
             title: postData?.title || '',
             slug: postData?.$id || '',
@@ -34,17 +35,18 @@ export default function PostForm({ postData }) {
         featuredImage: file ? file.$id : undefined,
       });
 
+      console.log(updatePost)
+
       updatePost && navigate(`/post/${updatePost.$id}`);
     } else {
         const file = await service.uploadFile(data.image[0]);
         data.featuredImage = file.$id;
-        delete data.image
-        console.log(data)
       const createPost = await service.createPost({
         ...data,
+        status: true,
         userID: userData.$id,
       });
-    //   createPost && navigate(`/post/${createPost.$id}`);
+      createPost && navigate(`/post/${createPost.$id}`);
     }
   };
 
@@ -58,22 +60,18 @@ export default function PostForm({ postData }) {
     return () => subscription.unsubscribe();
   }, [watch, slugTransform, setValue]);
 
-  const clickHandler = async() =>{
-        await service.createPost('mai-hoon-yaar',{
-            content: 'is this working', title: 'yoo man', featuredImage: '65b9252d893fb707f021',  userID : '4354'
-        })
-  }
-
   return (
     <Container>
       <form onSubmit={handleSubmit(submit)}>
         <Input label='Title' placeholder='Title' {...register('title', {required:true})}/>
         <Input label='Slug' placeholder='Slug' name='slug' {...register('slug')} />
         <RTE control={control} initialValue={getValues('content')} label={"Content Form"} name={'content'}/>
+        {
+          postData && <div><img src={service.getPreviewFile(postData.featuredImage)} alt="" srcset="" /></div>
+        }
         <Input type="file"  accept="image/png, image/jpg, image/jpeg, image/gif" label="Featured Image" {...register("image")}/>
         <Button>Submit</Button>
       </form>
-      <button className="bg-green-400 p-10" onClick={clickHandler}>click here yoo</button>
     </Container>
   );
 }

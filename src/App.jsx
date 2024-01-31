@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import {useDispatch } from "react-redux";
 import authService from "./appwrite/auth";
 import { login } from "./store/authSlice";
-import { Footer, Header } from "./components";
-import { Outlet } from "react-router";
+import { Footer, Header} from "./components";
+import { Outlet, useNavigate } from "react-router";
+import service from "./appwrite/config";
 
 function App() {
   const [loader, setLoader] = useState(true);
@@ -15,7 +16,6 @@ function App() {
       .finally(setLoader(false));
   });
 
-  useSelector(state=>console.log(state))
 
   return (
     <>

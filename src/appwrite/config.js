@@ -14,7 +14,7 @@ class Service {
 
   // to create post
 
-  async createPost(slug,{ content, title, featuredImage , status, userID }) {
+  async createPost({ content, title, slug, featuredImage , status, userID }) {
     try {
       return await this.database.createDocument(
         appwriteDatabaseID,
@@ -38,7 +38,7 @@ class Service {
 
   async updatePost(slug, { content, title, featuredImage, status}) {
     try {
-      await this.database.updateDocument(
+      return await this.database.updateDocument(
         appwriteDatabaseID,
         appwriteCollectionID,
         slug,
@@ -79,7 +79,7 @@ class Service {
         return await this.database.listDocuments(
             appwriteDatabaseID,
             appwriteCollectionID,
-            queries
+            // queries
         )
     } catch (error) {
         console.error('error while getting posts : ', error)
@@ -123,7 +123,7 @@ class Service {
 
   async getFile(fileID){
     try {
-        return await this.bucket.getFile(
+        return await this.bucket.getFileView(
             appwriteBucketID,
             fileID
         )
@@ -136,9 +136,9 @@ class Service {
 
   // to get preview file
 
-  async getPreviewFile(fileID){
+   getPreviewFile(fileID){
     try {
-        return await this.bucket.getFilePreview(
+        return this.bucket.getFilePreview(
             appwriteBucketID,
             fileID
         )
