@@ -1,15 +1,22 @@
-import React, { useId } from "react";
+import React from 'react'
 
-function Input({label, type = "text", placeholder = "", ...props }, ref) {
-  let id = useId();
-  return label ? (
+function Input({
+    label='',
+    bgColor='',
+    width='',
+    textColor='',
+    type='text',
+    placeholder = 'your name',
+    ...props
+}, ref) {
+  return (
     <div>
-      <label htmlFor={id}>{label} : </label>
-      <input id={id} type={type} placeholder={placeholder} {...props} ref={ref} />
+       {
+        label && <label className='block text-sm font-semibold text-gray-600 mb-1'>{label} : </label>
+       }
+       <input type={type} ref={ref} placeholder={placeholder} className={`${bgColor} ${width} ${textColor} p-2 rounded-md border border-gray-300 focus:outline-none focus:ring focus:border-blue-500 mb-3`} {...props}/>
     </div>
-  ) : (
-    <input id={id} type={type} placeholder={placeholder} {...props} ref={ref}/>
-  );
+  )
 }
 
-export default React.forwardRef(Input);
+export default React.forwardRef(Input)

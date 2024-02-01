@@ -1,56 +1,68 @@
-import {Account, Client, ID} from 'appwrite'
-import {appwriteProjectID, appwriteProjectURL} from '../conf/conf.js'
+import { Client, Account, ID} from "appwrite";
+import { APPWRITE_ID, APPWRITE_URL } from "../envConf/conf";
 
-class AuthService {
-    client = new Client()
+class AppwriteAuthService{
+    client = new Client
     account;
 
-    constructor(){
+    constructor (){
         this.client
-            .setProject(appwriteProjectID)
-            .setEndpoint(appwriteProjectURL)
+            .setEndpoint(APPWRITE_URL)
+            .setProject(APPWRITE_ID)
         this.account = new Account(this.client)
     }
 
-    async createAccount({email, password, name}){
-        try {
-             let user = await this.account.create(ID.unique(), email, password, name)
-             if(user)
-                return this.loginUser({
-                    email, password, name
-            })
-        } catch (error) {
-            console.error('error while creating account : ', error)
+    // methods to account
+
+    //creating account
+    async createUser({email, password, name}){
+        try{
+            
+            const account = await this.account.create(
+                ID.unique(),
+                email,
+                password,
+                name
+            )
+
+            if(account)
+                {
+                    await this.loginUser({email, password})
+                    return account
+                }
         }
-        return null
+        catch(error){
+            console.log("Error : While Creating User :: ", error)
+        }
     }
 
-    async isLoggedIn(){
-        try {
-            return await this.account.get()
-        } catch (error) {
-            console.error('error while getting user : ', error)
-        }
-        return null
-    }
-
+    //login account
     async loginUser({email, password}){
-        try {
-            return await this.account.createEmailSession(email, password)
-        } catch (error) {
-            console.error("error while login : ", error)
+        try{
+            return await 
+            this.account.createEmailSession(
+                email,
+                password
+            )
         }
-        return null
+        catch(error){
+            console.log("Error : While Creating User :: ", error)
+            throw error
+        }
     }
 
+
+    //logout account
     async logoutUser(){
-        try {
-            return await this.account.deleteSession('current')
-        } catch (error) {
-            console.error('error while logout : ', error)
+        try{
+            return await 
+            this.account.deleteSession('current')
+        }
+        catch(error){
+            console.log("Error : While Creating User :: ", error)
         }
     }
 }
 
-const authService = new AuthService;
-export default authService
+const authService = new AppwriteAuthService()
+export default authService;

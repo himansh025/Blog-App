@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from "react";
-import {useDispatch } from "react-redux";
-import authService from "./appwrite/auth";
-import { login } from "./store/authSlice";
-import { Footer, Header} from "./components";
-import { Outlet, useNavigate } from "react-router";
-import service from "./appwrite/config";
+import { useSelector } from "react-redux";
+import appwriteService from "./appwrite/config";
+import { Outlet } from "react-router";
+import { Container, Header } from "./components";
 
 function App() {
-  const [loader, setLoader] = useState(true);
-  const dispatch = useDispatch()
-  useEffect(() => {
-    authService
-      .isLoggedIn()
-      .then((user) => user&&dispatch(login({userData: user})))
-      .finally(setLoader(false));
-  });
-
-
+  useSelector((state) => console.log(state));
   return (
-    <>
+    <Container>
       <Header/>
-      <Outlet/>
-      <Footer/>
-    </>
+      <Outlet />
+    </Container>
   );
 }
 

@@ -1,172 +1,142 @@
-import { Client, Storage, Databases, Query, ID} from "appwrite";
-import { appwriteBucketID,appwriteCollectionID,appwriteDatabaseID,appwriteProjectID,appwriteProjectURL} from "../conf/conf";
+import { Client, Databases, Storage} from "appwrite";
+import { APPWRITE_BUCKET_ID, APPWRITE_COLLECTION_ID, APPWRITE_DB_ID, APPWRITE_ID, APPWRITE_URL } from "../envConf/conf";
 
-class Service {
-  client = new Client();
-  database;
-  bucket;
+class AppwriteService{
+    client = new Client;
+    database;
+    bucket;
 
-  constructor() {
-    this.client.setEndpoint(appwriteProjectURL).setProject(appwriteProjectID);
-    this.database = new Databases(this.client);
-    this.bucket = new Storage(this.client);
-  }
+    constructor (){
+        this.client
+            .setProject(APPWRITE_ID)
+            .setEndpoint(APPWRITE_URL)
+        this.database = new Databases(this.client)
+        this.bucket = new Storage(this.client)
+    }
 
-  // to create post
+    // methods for appwrite service
 
-  async createPost({ content, title, slug, featuredImage , status, userID }) {
-    try {
-      return await this.database.createDocument(
-        appwriteDatabaseID,
-        appwriteCollectionID,
-        slug,
-        {
-          title,
-          content,
-          featuredImage,
-          status,
-          userID,
+    //createPost
+    async createPost({slug, title, content, isPublic, imageFile, userID, userName}){
+        try {
+            const postImage = await this.uploadImage(imageFile)
+            if(postImage){
+                return await
+                this.database.createDocument(
+                    APPWRITE_DB_ID,
+                    APPWRITE_COLLECTION_ID,
+                    slug,
+                    {
+                        title, 
+                        content, 
+                        isPublic, 
+                        postImage, 
+                        userID, 
+                        userName
+                    }
+            )
+            }
+        } catch (error) {
+            console.log("Error : Error while creating account :: ", error)
         }
-      );
-    } catch (error) {
-      console.error("error while creating post : ", error);
     }
-  }
 
+    //updatePost
+    async updatePost(slug, imageFile=null, {title, content, isPublic, postImage, userID, userName}){
 
-  // to update post
-
-  async updatePost(slug, { content, title, featuredImage, status}) {
-    try {
-      return await this.database.updateDocument(
-        appwriteDatabaseID,
-        appwriteCollectionID,
-        slug,
-        {
-          content,
-          title,
-          featuredImage,
-          status,
+        if(imageFile){
+            await this.deleteImage(postImage)
+            postImage = await this.uploadImage(imageFile)
         }
-      );
-    } catch (error) {
-      console.error("error while updating post : ", error);
-      throw error;
+
+        if(postImage){
+            try {
+                return await this.database.updateDocument(
+                    APPWRITE_DB_ID,
+                    APPWRITE_COLLECTION_ID,
+                    slug,
+                    {
+                        title, 
+                        content, 
+                        isPublic, 
+                        postImage, 
+                        userID, 
+                        userName
+                    }
+                )
+            } catch (error) {
+                console.log("Error : Error while creating account :: ", error)
+            }
+        }
+
+        else return console.log("Error: Error while uploading file.")
+        
     }
-  }
 
+    //delete post
 
-  // to get post
-
-  async getPost(slug){
-    try {
-        return await this.database.getDocument(
-            appwriteDatabaseID,
-            appwriteCollectionID,
-            slug
-        )
-    } catch (error) {
-        console.error('error while getting post : ', error)
-        throw error
+    async deletePost(id){
+        try {
+            return await this.database.deleteDocument(
+                APPWRITE_DB_ID,
+                APPWRITE_COLLECTION_ID,
+                id
+            )
+        } catch (error) {
+            console.log("Error : Error while deleting post :: ", error)
+        }
     }
-  }
 
 
-  // to get multiple posts
-
-  async getPosts(queries = Query.equal('status', true)){
-    try {
-        return await this.database.listDocuments(
-            appwriteDatabaseID,
-            appwriteCollectionID,
-            // queries
-        )
-    } catch (error) {
-        console.error('error while getting posts : ', error)
+    //upload image
+    async uploadImage(file){
+        try {
+            return await this.bucket.createFile(
+                APPWRITE_BUCKET_ID,
+                file
+            )
+        } catch (error) {
+            console.log("Error : Error while uploading file :: ", error)
+        }
     }
-  }
 
-
-  // to delete post
-
-  async deletePost(slug){
-    try {
-        return this.database.deleteDocument(
-            appwriteDatabaseID,
-            appwriteCollectionID,
-            slug
-        )
-    } catch (error) {
-        console.error("error while deleting post : ", error)
-        throw error
+    //delete image
+    async deleteImage(fileID){
+        try {
+            return await this.bucket.deleteFile(
+                APPWRITE_BUCKET_ID,
+                fileID
+            )
+        } catch (error) {
+            console.log("Error : Error while deleting file :: ", error)
+        }
     }
-  }
 
-
-  // to upload file
-
-  async uploadFile(file){
-    try {
-        return await this.bucket.createFile(
-            appwriteBucketID,
-            ID.unique(),
-            file
-        )
-    } catch (error) {
-        console.log('error while uploading file : ', error)
-        throw error
+    //get image
+    getImage(fileID){
+        try {
+            return this.bucket.getFileView(
+                APPWRITE_BUCKET_ID,
+                fileID
+            )
+        } catch (error) {
+            console.log("Error : Error while getting file :: ", error)
+        }
     }
-  }
 
-
-  // to get file
-
-  async getFile(fileID){
-    try {
-        return await this.bucket.getFileView(
-            appwriteBucketID,
-            fileID
-        )
-    } catch (error) {
-        console.log('error while getting file : ', error)
-        throw error
+    //get preview image
+    getImage(fileID){
+        try {
+            return this.bucket.getFilePreview(
+                APPWRITE_BUCKET_ID,
+                fileID
+            )
+        } catch (error) {
+            console.log("Error : Error while getting preview file :: ", error)
+        }
     }
-  }
-
-
-  // to get preview file
-
-   getPreviewFile(fileID){
-    try {
-        return this.bucket.getFilePreview(
-            appwriteBucketID,
-            fileID
-        )
-    } catch (error) {
-        console.log('error while getting preview file : ', error)
-        throw error
-    }
-  }
-
-  // to delete file
-
-  async deleteFile(fileID){
-    try {
-        return await this.bucket.deleteFile(
-            appwriteBucketID,
-            fileID
-        )
-    } catch (error) {
-        console.log('error while deleting file : ', error)
-        throw error
-    }
-  }
 }
 
+const appwriteService = new AppwriteService()
 
-    
-
-
-
-const service = new Service();
-export default service;
+export default appwriteService;

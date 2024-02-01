@@ -1,77 +1,56 @@
-import { Container, Logo, Button } from "../";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import authService from "../../appwrite/auth";
-import { login, logout } from "../../store/authSlice";
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+
 
 function Header() {
-  let isLogged = useSelector((state) => state.status);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  const logoutHandler = async() =>{
-    await authService.logoutUser()
-    dispatch(logout())
-  }
-  const links = [
-    {
-      name: "Home",
-      slug: "/",
-      visible: true,
-    },
-    {
-      name: "Create",
-      slug: "/createPost",
-      visible: isLogged,
-    },
-    {
-      name: "Edit",
-      slug: "/editPost",
-      visible: isLogged,
-    },
-    {
-      name: "Posts",
-      slug: "/posts",
-      visible: isLogged,
-    },
-  ];
+    const isAuth = useSelector(state=> state.isAuth)
+    const navItems = [
+        {
+            name : 'Home',
+            to: '/',
+            visible : true,
+        },
+        {
+            name : 'Login',
+            to: '/login',
+            visible : !isAuth,
+        },
+        {
+            name : 'Signup',
+            to: '/signup',
+            visible : !isAuth,
+        },
+        {
+            name : 'My Posts',
+            to: '/user/posts/',
+            visible : isAuth,
+        },
+        {
+            name : 'Logout',
+            visible : isAuth,
+            to: '/'
+        },
+    ]
 
   return (
-    <nav>
-      <Container>
-        <ul className="flex justify-center items-center">
-          <li>
-            <Link>
-              <Logo></Logo>
-            </Link>
-          </li>
-          {links.map(
-            (link) =>
-              link.visible && (
-                <li key={link.name}>
-                  <Link to={link.slug}><Button>{link.name}</Button></Link>
-                </li>
-              )
-          )}
-          <li className={`${isLogged && "hidden"}`}>
-            <Link to="/login">
-              <Button>Login</Button>
-            </Link>
-          </li>
-          <li className={`${isLogged && "hidden"}`}>
-            <Link to="/signup">
-              <Button>Sign Up</Button>
-            </Link>
-          </li>
-          <li className={`${!isLogged && "hidden"}`} onClick={logoutHandler}>
-            <Button>Logout</Button>
-          </li>
+    <nav className='mt-3 p-4 rounded-2xl flex justify-between items-center shadow-2xl'>
+            <div className='text-black hover:text-gray-600 text-2xl'>
+                <Link to='/'>Logo</Link>
+            </div>
+        <ul className='flex justify-center gap-5 items-center'>
+            {
+                navItems
+                .map(item=>(
+                    item.visible && 
+                    <li className='text-black hover:text-gray-600' key={item.name}>
+                        <Link to={item.to}>{item.name}</Link>
+                    </li>
+                ))
+            }
         </ul>
-      </Container> 
     </nav>
-  );
+  )
 }
 
-export default Header;
+export default Header
