@@ -1,41 +1,45 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '../components';
+import { useForm } from 'react-hook-form';
+import authService from '../appwrite/auth';
+import { login } from '../store/appSlice';
 
 
 function Signup() {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handleSignup = () => {
-    // Dispatch signup action here
-    
+  const navigate = useNavigate('/')
+  const {handleSubmit, register} = useForm()
+  const [error, setError] = useState(null)
+  const submit = async(data) => {
+    try {
+      const userData = await authService.createUser(data)
+      dispatch(login({userData}))
+      navigate('/')
+    } catch (error) {
+      setError(error.message)
+    }
   };
 
-  const signupError = useSelector(state => state.signupError);
-  console.log()
 
   return (
     <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
       <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-      <form>
-        <Input type="text" placeholder="Enter your name" value={email} onChange={(e) => setEmail(e.target.value)} label="Name" />
-        <Input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} label="Email" />
-        <Input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} label="Password" />
+      <form onSubmit={handleSubmit(submit)}>
+        <Input type="text" minLength={4} placeholder="Enter your name"  label="Name" {...register('name', {required: true})}/>
+        <Input type="email" placeholder="Enter your email" label="Email" {...register('email', {required: true})}/>
+        <Input type="password" minLength={8} placeholder="Enter your password" label="Password" {...register('password', {required: true})}/>
 
-        {signupError && (
+        {error&& (
           <div className="text-red-500 mb-4">
-            {signupError}
+            {error}
           </div>
         )}
 
         <button
-          type="button"
+          type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-          onClick={handleSignup}
         >
           Sign Up
         </button>

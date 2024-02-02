@@ -1,4 +1,4 @@
-import { Client, Databases, Storage} from "appwrite";
+import { Client, Databases, ID, Storage} from "appwrite";
 import { APPWRITE_BUCKET_ID, APPWRITE_COLLECTION_ID, APPWRITE_DB_ID, APPWRITE_ID, APPWRITE_URL } from "../envConf/conf";
 
 class AppwriteService{
@@ -93,6 +93,7 @@ class AppwriteService{
         try {
             return await this.bucket.createFile(
                 APPWRITE_BUCKET_ID,
+                ID.unique(),
                 file
             )
         } catch (error) {

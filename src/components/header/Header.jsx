@@ -1,15 +1,31 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import authService from '../../appwrite/auth'
+import { logout } from '../../store/appSlice'
 
 
 function Header() {
     const isAuth = useSelector(state=> state.isAuth)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const logoutHandler = () =>{
+        authService.logoutUser().then(()=>{
+            dispatch(logout())
+            navigate('/')
+        })
+    }
+
     const navItems = [
         {
             name : 'Home',
             to: '/',
-            visible : true,
+            visible : !isAuth,
+        },
+        {
+            name : 'Create Post',
+            to: '/create',
+            visible : isAuth,
         },
         {
             name : 'Login',
@@ -44,7 +60,11 @@ function Header() {
                 .map(item=>(
                     item.visible && 
                     <li className='text-black hover:text-gray-600' key={item.name}>
-                        <Link to={item.to}>{item.name}</Link>
+                        {
+                            item.name === 'Logout' ? 
+                            <Link to={item.to} onClick={logoutHandler}>{item.name}</Link> :
+                            <Link to={item.to}>{item.name}</Link>
+                        }
                     </li>
                 ))
             }

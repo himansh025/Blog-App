@@ -4,6 +4,7 @@ import { Input } from "../components";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
+import { login } from "../store/appSlice";
 
 function Login() {
   const dispatch = useDispatch();
@@ -14,13 +15,13 @@ function Login() {
   const { handleSubmit, register} = useForm();
   const submit = async(data) =>{
     try {
-        await authService.createUser(data)
-        
+        const userData = await authService.loginUser(data)
+        dispatch(login({userData}))
+        navigate('/')
     } catch (error) {
-        console.log(error, 'yahan error hai')
-        setError(error)
+        setError(error.message)
     }
-    // console.log(error)
+    console.log(error)
   }
 
   return (
@@ -34,13 +35,14 @@ function Login() {
           {...register("email", { required: true })}
         />
         <Input
+          minLength={8}
           type="password"
           placeholder="Enter your password"
           label="Password"
           {...register("password", { required: true })}
         />
 
-        {error && <div className="text-red-500 mb-4">{loginError}</div>}
+        {error && <div className="text-red-500 mb-4">{error}</div>}
 
         <button
           type="submit"

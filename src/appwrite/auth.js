@@ -14,6 +14,17 @@ class AppwriteAuthService{
 
     // methods to account
 
+    //checking logged account
+    async checkLoggedAccount(){
+        try{
+            return await this.account.get()
+        }
+        catch(error){
+            console.log("Error : While Creating User :: ", error)
+            throw error
+        }
+    }
+
     //creating account
     async createUser({email, password, name}){
         try{
@@ -33,6 +44,7 @@ class AppwriteAuthService{
         }
         catch(error){
             console.log("Error : While Creating User :: ", error)
+            throw error
         }
     }
 
