@@ -1,22 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import RTE from "../RTE";
 import { useForm } from "react-hook-form";
 import Input from "../Input";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import appwriteService from "../../appwrite/config";
+import { login } from "../../store/appSlice";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
+import Button from "../button/Button";
 
 function PostForm({ newPost = "hello" }) {
   const { handleSubmit, getValues, setValues, register, control } = useForm();
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const userData = useSelector((state) => state.userData);
+
   const submit = (formData) => {
+    setLoading(true)
     const userName = userData?.name.replace(" ", '');
     const userID = userData?.$id
     const imageFile = formData.imageFile[0]
     const isPublic = Boolean(formData.isPublic)
     const data = {...formData,userName,userID,isPublic,imageFile}
-    console.log(data)
-    appwriteService.createPost(data).then(()=>{
-        
+    appwriteService.createPost(data).then((userPost)=>{
+      dispatch(login({userPosts : [userPost]}))
+      toast.success("Post Added")
+      navigate(`/post/${formData.slug}`)
     }).catch(error=>console.log(error))
   };
 
@@ -56,9 +66,9 @@ function PostForm({ newPost = "hello" }) {
             <option value={true}>Public</option>
             <option value={false}>Private</option>
         </select>
-        <button className="bg-green-300 p-4">
+        <Button loading={loading} className="bg-green-300 p-4">
           {newPost ? "Create Post" : "Update Post"}
-        </button>
+        </Button>
       </form>
     </div>
   );

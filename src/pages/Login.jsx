@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "../components";
+import { Button, Input } from "../components";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
@@ -44,12 +44,12 @@ function Login() {
 
         {error && <div className="text-red-500 mb-4">{error}</div>}
 
-        <button
+
+        <Button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
         >
           Login
-        </button>
+        </Button>
       </form>
       <p className="mt-4 text-gray-600">
         Don't have an account?{" "}

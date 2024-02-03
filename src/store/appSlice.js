@@ -14,7 +14,7 @@ const appSlice = createSlice({
         login : (state, actions)=>{
             state.isAuth = true
             state.userData = actions.payload.userData
-            state.userPosts = actions.payload.userPosts
+            state.userPosts = [...state.userPosts, ...actions.payload.userPosts]
         },
         logout : (state)=>{
             state.isAuth = false

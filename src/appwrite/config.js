@@ -19,22 +19,26 @@ class AppwriteService{
     //createPost
     async createPost({slug, title, content, isPublic, imageFile, userID, userName}){
         try {
-            const postImage = await this.uploadImage(imageFile)
-            if(postImage){
-                return await
-                this.database.createDocument(
-                    APPWRITE_DB_ID,
-                    APPWRITE_COLLECTION_ID,
-                    slug,
-                    {
-                        title, 
-                        content, 
-                        isPublic, 
-                        postImage, 
-                        userID, 
-                        userName
-                    }
-            )
+            const postImageData = await this.uploadImage(imageFile)
+            try {
+                if(postImageData){
+                    const postImage = postImageData.$id
+                    return await this.database.createDocument(
+                        APPWRITE_DB_ID,
+                        APPWRITE_COLLECTION_ID,
+                        slug,
+                        {
+                            title, 
+                            content, 
+                            isPublic, 
+                            postImage, 
+                            userID, 
+                            userName
+                        }
+                )
+                }
+            } catch (error) {
+                console.log("Error : Errow while creating post :: ", error)
             }
         } catch (error) {
             console.log("Error : Error while creating account :: ", error)
@@ -46,11 +50,12 @@ class AppwriteService{
 
         if(imageFile){
             await this.deleteImage(postImage)
-            postImage = await this.uploadImage(imageFile)
+            postImageData = await this.uploadImage(imageFile)
         }
 
-        if(postImage){
+        if(postImageData){
             try {
+                const postImage = postImageData.$id
                 return await this.database.updateDocument(
                     APPWRITE_DB_ID,
                     APPWRITE_COLLECTION_ID,
@@ -73,14 +78,12 @@ class AppwriteService{
         
     }
 
-    //delete post
+    //get posts
 
-    async deletePost(id){
+    async getPosts(){
         try {
-            return await this.database.deleteDocument(
-                APPWRITE_DB_ID,
-                APPWRITE_COLLECTION_ID,
-                id
+            return await this.database.listDocuments(APPWRITE_DB_ID,
+                APPWRITE_COLLECTION_ID
             )
         } catch (error) {
             console.log("Error : Error while deleting post :: ", error)
