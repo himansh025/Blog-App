@@ -39,7 +39,7 @@ function Header() {
         },
         {
             name : 'My Posts',
-            to: '/user/posts/',
+            to: 'posts/',
             visible : isAuth,
         },
         {

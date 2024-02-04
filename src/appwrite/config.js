@@ -78,6 +78,19 @@ class AppwriteService{
         
     }
 
+    //delete posts
+    async deletePost(id){
+        try {
+            return await this.database.deleteDocument(
+                APPWRITE_DB_ID,
+                APPWRITE_COLLECTION_ID,
+                id
+            )
+        } catch (error) {
+            console.log("Error : Error while deleting post :: ", error)
+        }
+    }
+
     //get posts
 
     async getPosts(){
@@ -86,7 +99,7 @@ class AppwriteService{
                 APPWRITE_COLLECTION_ID
             )
         } catch (error) {
-            console.log("Error : Error while deleting post :: ", error)
+            console.log("Error : Error while getting post :: ", error)
         }
     }
 
@@ -117,7 +130,7 @@ class AppwriteService{
     }
 
     //get image
-    getImage(fileID){
+    getPreviewImage(fileID){
         try {
             return this.bucket.getFileView(
                 APPWRITE_BUCKET_ID,

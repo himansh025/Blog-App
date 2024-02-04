@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import Input from "../Input";
 import { useDispatch, useSelector } from "react-redux";
 import appwriteService from "../../appwrite/config";
-import { login } from "../../store/appSlice";
+import { updateUserPosts } from "../../store/appSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import Button from "../button/Button";
@@ -24,7 +24,7 @@ function PostForm({ newPost = "hello" }) {
     const isPublic = Boolean(formData.isPublic)
     const data = {...formData,userName,userID,isPublic,imageFile}
     appwriteService.createPost(data).then((userPost)=>{
-      dispatch(login({userPosts : [userPost]}))
+      dispatch(updateUserPosts(userPost))
       toast.success("Post Added")
       navigate(`/post/${formData.slug}`)
     }).catch(error=>console.log(error))

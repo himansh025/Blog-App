@@ -12,23 +12,28 @@ function App() {
 
   // to check the logged user and userPosts on reload
   useEffect(()=>{
-    authService.checkLoggedAccount().then((userData)=>{
-      appwriteService.getPosts().then(userPosts=>{
-        userPosts = userPosts.documents
-        dispatch(login({userData, userPosts}))
-      })
-    })
+    const fetchData = async()=>{
+      authService.checkLoggedAccount().then((userData)=>{
+        appwriteService.getPosts().then(userPosts=>{
+          userPosts = userPosts.documents
+          dispatch(login({userData, userPosts}))
+        })
+      })  
+    }
+    fetchData()
   },[])
-
-  useSelector((state)=>console.log(state.userPosts))
   
+  const loginTried = useSelector((state)=>state.loginTried)
+  
+  if(loginTried) 
   return (
     <Container>
-      <Toaster/>
-      <Header/>
-      <Outlet />
+            <Toaster/>
+            <Header/>
+            <Outlet />
     </Container>
-  );
+  ) 
+  else return<p>loading...</p>
 }
 
 export default App;
