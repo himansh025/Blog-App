@@ -51,8 +51,7 @@ class AppwriteAuthService{
     //login account
     async loginUser({email, password}){
         try{
-            return await 
-            this.account.createEmailSession(
+            return await this.account.createEmailSession(
                 email,
                 password
             )
@@ -67,8 +66,7 @@ class AppwriteAuthService{
     //logout account
     async logoutUser(){
         try{
-            return await 
-            this.account.deleteSession('current')
+            return await this.account.deleteSession('current')
         }
         catch(error){
             console.log("Error : While Creating User :: ", error)

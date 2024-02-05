@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import { Container, Header } from "./components";
 import { useEffect } from "react";
 import authService from "./appwrite/auth";
-import { login } from "./store/appSlice";
+import { login, logout } from "./store/appSlice";
 import { Toaster } from "react-hot-toast";
 import appwriteService from "./appwrite/config";
 
@@ -13,12 +13,12 @@ function App() {
   // to check the logged user and userPosts on reload
   useEffect(()=>{
     const fetchData = async()=>{
-      authService.checkLoggedAccount().then((userData)=>{
-        appwriteService.getPosts().then(userPosts=>{
-          userPosts = userPosts.documents
-          dispatch(login({userData, userPosts}))
-        })
-      })  
+      const userData = await authService.checkLoggedAccount()
+      if(userData){
+        let userPosts = await appwriteService.getPosts()
+        userPosts = userPosts.documents
+        dispatch(login({userData, userPosts}))
+      }
     }
     fetchData()
   },[])

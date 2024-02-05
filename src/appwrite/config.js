@@ -46,35 +46,32 @@ class AppwriteService{
     }
 
     //updatePost
-    async updatePost(slug, imageFile=null, {title, content, isPublic, postImage, userID, userName}){
+    async updatePost(slug, imageFile, {title, content, isPublic, postImage, userID, userName}){
 
         if(imageFile){
             await this.deleteImage(postImage)
-            postImageData = await this.uploadImage(imageFile)
+            postImage = await this.uploadImage(imageFile)
         }
 
-        if(postImageData){
-            try {
-                const postImage = postImageData.$id
-                return await this.database.updateDocument(
-                    APPWRITE_DB_ID,
-                    APPWRITE_COLLECTION_ID,
-                    slug,
-                    {
-                        title, 
-                        content, 
-                        isPublic, 
-                        postImage, 
-                        userID, 
-                        userName
-                    }
-                )
-            } catch (error) {
-                console.log("Error : Error while creating account :: ", error)
-            }
+        try {
+            return await this.database.updateDocument(
+                APPWRITE_DB_ID,
+                APPWRITE_COLLECTION_ID,
+                slug,
+                {
+                    title, 
+                    content, 
+                    isPublic, 
+                    postImage, 
+                    userID, 
+                }
+            )
+        } catch (error) {
+            console.log("Error : Error while creating account :: ", error)
         }
+        
 
-        else return console.log("Error: Error while uploading file.")
+
         
     }
 

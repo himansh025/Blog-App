@@ -23,6 +23,8 @@ const appSlice = createSlice({
             state.isAuth = false
             state.userData = null
             state.userPosts = []
+            state.userPost = {}
+            state.loginTried = true
         },
         getPublicPosts : (state, actions) =>{
             state.allPosts = actions.payload.publicPosts
@@ -33,12 +35,12 @@ const appSlice = createSlice({
         deleteUserPost: (state, actions) =>{
             state.userPosts = state.userPosts.filter(userPost => userPost.$id != actions.payload)
         },
-        getUserPost: (state, actions) =>{
-            state.userPost = state.userPosts.filter(userPost => userPost.$id === actions.payload)
+        setUserPost: (state, actions) =>{
+            state.userPost = state.userPosts.filter(userPost => userPost.$id === actions.payload)[0]
         }
     }
 })
 
-export const {getPublicPosts, login, logout, updateUserPosts, deleteUserPost, getUserPost} = appSlice.actions
+export const {getPublicPosts, login, logout, updateUserPosts, deleteUserPost, setUserPost} = appSlice.actions
 
 export default appSlice.reducer

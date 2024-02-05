@@ -4,36 +4,44 @@ import { useNavigate, useParams } from "react-router";
 import appwriteService from "../appwrite/config";
 import { Link } from "react-router-dom";
 import {Button} from '../components'
-import { deleteUserPost, getUserPost, login } from "../store/appSlice";
+import { deleteUserPost, setUserPost, login } from "../store/appSlice";
 
 function Post() {
-  const path = useParams();
-  console.log(path)
-  const slug = path.slug
+  const {slug} = useParams();
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  useEffect(()=>{
+    dispatch(setUserPost(slug))
+  },[])
+
+
   const [loading, setLoading] = useState(false)
-  dispatch(getUserPost(slug))
   const postData = useSelector((state) => state.userPost);
-  const editHandler = () =>{
+  
 
-  }
+  if (postData!={} && postData) {
 
-  if (postData) {
     const deleteHandler = async() =>{
       setLoading(true)
       await appwriteService.deletePost(postData.$id)
       dispatch(deleteUserPost(postData.$id))
       navigate('/')
     }
+
+    const editHandler = () =>{
+      navigate(`/edit/${slug}`)
+    }
+
     const { title, content, postImage } = postData;
-    // const featuredImage = appwriteService.getImage(postImage);
+
+    const featuredImage = appwriteService.getImage(postImage);
     return (
       <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
         <h2 className="text-2xl font-bold mb-4">{title}</h2>
         <div className="mb-4">
           <img
-            // src={featuredImage}
+            src={featuredImage}
             alt={title}
             className="w-full h-auto rounded-md"
           />
