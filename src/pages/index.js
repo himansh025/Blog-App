@@ -1,9 +1,9 @@
-import AllPosts from "./AllPosts";
-import CreatePost from "./CreatePost";
-import Login from "./Login";
-import Post from "./Post";
-import Signup from "./Signup";
-import UserPosts from './UserPosts'
-import EditPost from "./EditPost";
+import AllPosts from "./AllPosts.jsx";
+import CreatePost from "./CreatePost.jsx";
+import Login from "./Login.jsx";
+import Post from "./Post.jsx";
+import Signup from "./Signup.jsx";
+import UserPosts from './UserPosts.jsx'
+import EditPost from "./EditPost.jsx";
 
 export {Login, Signup, CreatePost, Post, AllPosts, UserPosts, EditPost}

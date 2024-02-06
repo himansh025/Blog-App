@@ -1,4 +1,4 @@
-import Header from "./header/header";
+import Header from "./header/Header";
 import Container from "./container/Container";
 import Input from './Input'
 import PostForm from "./post-form/PostForm";
