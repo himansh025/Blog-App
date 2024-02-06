@@ -6,10 +6,11 @@ const appSlice = createSlice({
     initialState : {
         isAuth : false,
         userData : null,
-        allPosts : [],
         userPosts : [],
         userPost : {},
-        loginTried : false
+        loginTried : false,
+        publicPosts : [],
+        publicUserPost : {}
     },
 
     reducers: {
@@ -28,9 +29,6 @@ const appSlice = createSlice({
             state.userPosts = []
             state.userPost = {}
         },
-        getPublicPosts : (state, actions) =>{
-            state.allPosts = actions.payload.publicPosts
-        },
         updateUserPosts : (state, actions) =>{
             state.userPosts = state.userPosts.map(userPost=>userPost.$id == actions.payload.$id ? actions.payload : userPost)
         },
@@ -42,10 +40,16 @@ const appSlice = createSlice({
         },
         setUserPost: (state, actions) =>{
             state.userPost = state.userPosts.filter(userPost => userPost.$id === actions.payload)[0]
+        },
+        setPublicPosts : (state, actions) =>{
+            state.publicPosts = actions.payload
+        },
+        setPublicUserPost : (state, actions) =>{
+            state.publicUserPost = state.publicPosts.filter(publicPost =>publicPost.$id==actions.payload)[0]
         }
     }
 })
 
-export const {getPublicPosts, login, logout, addUserPosts, deleteUserPost, setUserPost, updateUserPosts, triedLogin} = appSlice.actions
+export const {getPublicPosts, login, logout, addUserPosts, deleteUserPost, setUserPost, updateUserPosts, triedLogin, setPublicPosts, setPublicUserPost} = appSlice.actions
 
 export default appSlice.reducer

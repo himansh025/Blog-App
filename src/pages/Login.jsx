@@ -17,15 +17,15 @@ function Login() {
     try {
         const userData = await authService.loginUser(data)
         if(userData){
-          let userPosts = await appwriteService.getPosts()
+          let userPosts = await appwriteService.getPosts(userData.$id)
           userPosts = userPosts.documents
           dispatch(login({userData, userPosts}))
         }
         navigate('/')
     } catch (error) {
         toast.error(error.message, {position: "bottom-center"})
+        console.log(error)
     }
-    console.log(error)
   }
 
   return (

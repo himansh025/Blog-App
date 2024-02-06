@@ -2,22 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import appwriteService from "../appwrite/config";
-import { Link } from "react-router-dom";
 import { Button } from "../components";
-import { deleteUserPost, setUserPost} from "../store/appSlice";
+import { deleteUserPost, setPublicUserPost, setUserPost} from "../store/appSlice";
 import parser from 'html-react-parser'
+import NotFound from "./NotFound";
 
 function Post() {
   const { slug } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const publicPost = useSelector(state=>state.publicPosts)
   useEffect(() => {
-    dispatch(setUserPost(slug));
+    dispatch(
+      publicPost.length>0 ? setPublicUserPost(slug) : setUserPost(slug)
+      );
   }, []);
 
   const [featuredImage, setFeaturedImage] = useState('');
-  const postData = useSelector((state) => state.userPost);
+  const postData = useSelector((state) => publicPost.length>0 ? state.publicUserPost : state.userPost);
 
   if(postData?.postImage){
     appwriteService.getImage(postData.postImage).then(image=>setFeaturedImage(image.href))
@@ -45,27 +47,16 @@ function Post() {
       </div>
       <div className="postContent">{parser(postData?.content || '')}</div>
       <p className="text-gray-500 mt-4">Slug: {slug}</p>
-      <div className="flex gap-3 my-3">
+      <div className={`flex gap-3 my-3 ${publicPost.length>0 && 'hidden'}`}>
         <Button onClick={editHandler}>Edit</Button>
         <Button onClick={deleteHandler}>Delete</Button>
       </div>
+      <h1 className={`${!publicPost.length>0 ? 'hidden' : 'inline-block'}`}><span>Publisher Name : </span>{postData.userName}</h1>
     </div>
   );
 
   else return(
-    <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
-      <h2 className="text-2xl font-bold mb-4">404 Not Found</h2>
-      <p className="text-gray-700 mb-4">
-        Oops! The page you are looking for does not exist.
-      </p>
-      <p className="text-gray-500">
-        Go back to the{" "}
-        <Link to="/" className="text-blue-500">
-          home page
-        </Link>
-        .
-      </p>
-    </div>
+    <NotFound/>
   );
 }
 

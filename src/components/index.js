@@ -5,6 +5,8 @@ import PostForm from "./post-form/PostForm";
 import Button from "./button/Button";
 import PostCard from "./PostCard";
 import Loader from "./loader/Loader";
+import Protected from "./protected/Protected";
 
 
-export {Header, Container, Input, PostForm, Button, PostCard, Loader, }
+
+export {Header, Container, Input, PostForm, Button, PostCard, Loader, Protected}

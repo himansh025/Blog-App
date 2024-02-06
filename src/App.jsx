@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import { Container, Header, Loader } from "./components";
 import { useEffect } from "react";
 import authService from "./appwrite/auth.js";
-import { login, logout, triedLogin } from "./store/appSlice.js";
+import { login, setPublicPosts, triedLogin } from "./store/appSlice.js";
 import { Toaster } from "react-hot-toast";
 import appwriteService from "./appwrite/config.js";
 
@@ -15,9 +15,13 @@ function App() {
     const fetchData = async () => {
       const userData = await authService.checkLoggedAccount();
       if (userData) {
-        let userPosts = await appwriteService.getPosts();
+        let userPosts = await appwriteService.getPosts(userData.$id);
         userPosts = userPosts.documents;
         dispatch(login({ userData, userPosts }));
+      }
+      else{
+          const publicPosts = await appwriteService.getPosts()
+          dispatch(setPublicPosts(publicPosts.documents))
       }
       dispatch(triedLogin());
     };

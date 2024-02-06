@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Storage} from "appwrite";
+import { Client, Databases, ID, Storage, Query} from "appwrite";
 import { APPWRITE_BUCKET_ID, APPWRITE_COLLECTION_ID, APPWRITE_DB_ID, APPWRITE_ID, APPWRITE_URL } from "../envConf/conf";
 
 class AppwriteService{
@@ -87,10 +87,13 @@ class AppwriteService{
 
     //get posts
 
-    async getPosts(){
+    async getPosts(userID){
         try {
             return await this.database.listDocuments(APPWRITE_DB_ID,
-                APPWRITE_COLLECTION_ID
+                APPWRITE_COLLECTION_ID,
+                userID && [
+                    Query.equal('userID', userID)
+                ]
             )
         } catch (error) {
             console.log("Error : Error while getting post :: ", error)

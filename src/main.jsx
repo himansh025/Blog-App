@@ -4,45 +4,65 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import {CreatePost, EditPost, Login, Post, Signup, UserPosts} from "./pages";
-
+import { Protected } from "./components/index.js";
+import { AllPosts, CreatePost, EditPost, Login, NotFound, Post, Signup, UserPosts } from "./pages";
 
 const router = createBrowserRouter([
   {
-    path : '/',
-    element: <App/>,
-    children:[
+    path: "/",
+    element: <App />,
+    children: [
       {
-        path: '',
-        element: <UserPosts/>
+        path: "",
+        element: <AllPosts/>,
       },
       {
-        path: 'login',
-        element: <Login/>
+        path: "login",
+        element: <Login />,
       },
       {
-        path: 'signup',
-        element: <Signup/>
+        path: "signup",
+        element: <Signup />,
       },
       {
-        path: 'create',
-        element: <CreatePost/>
+        path: "create",
+        element: (
+          <Protected >
+            <CreatePost />
+          </Protected>
+        ),
       },
       {
-        path: 'post/:slug',
-        element: <Post/>
+        path: "post/:slug",
+        element: (
+          // <Protected >
+            <Post/>
+          // </Protected>
+        ),
       },
       {
-        path: 'edit/:slug',
-        element: <EditPost/>
+        path: "edit/:slug",
+        element: (
+          <Protected >
+            <EditPost />
+          </Protected>
+        ),
       },
       {
-        path: 'posts',
-        element: <UserPosts/>
+        path: "posts",
+        element: (
+          <Protected >
+            <UserPosts />
+          </Protected>
+        ),
       },
-  ]
-  }
-])
+      {
+        path: '*',
+        element: <NotFound/>
+      }
+    ],
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
