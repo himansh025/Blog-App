@@ -4,7 +4,6 @@ import { APPWRITE_ID, APPWRITE_URL } from "../envConf/conf";
 class AppwriteAuthService{
     client = new Client
     account;
-
     constructor (){
         this.client
             .setEndpoint(APPWRITE_URL)
@@ -20,8 +19,8 @@ class AppwriteAuthService{
             return await this.account.get()
         }
         catch(error){
-            console.log("Error : While Creating User :: ", error)
-            throw error
+            console.log("Error : While checking logged in user :: ", error)
+            // throw error
         }
     }
 

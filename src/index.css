@@ -1,3 +1,13 @@
+.postContent ul{
+    list-style-type: disc;
+    padding-left: 10px
+}
+
+.postContent ol{
+    list-style-type: number;
+    padding-left: 10px
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

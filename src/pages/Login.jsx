@@ -5,21 +5,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
 import { login } from "../store/appSlice";
+import appwriteService from "../appwrite/config";
+import toast from "react-hot-toast";
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const [error, setError] = useState(null)
-
 
   const { handleSubmit, register} = useForm();
   const submit = async(data) =>{
     try {
         const userData = await authService.loginUser(data)
-        dispatch(login({userData}))
+        if(userData){
+          let userPosts = await appwriteService.getPosts()
+          userPosts = userPosts.documents
+          dispatch(login({userData, userPosts}))
+        }
         navigate('/')
     } catch (error) {
-        setError(error.message)
+        toast.error(error.message, {position: "bottom-center"})
     }
     console.log(error)
   }
@@ -41,9 +45,6 @@ function Login() {
           label="Password"
           {...register("password", { required: true })}
         />
-
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-
 
         <Button
           type="submit"

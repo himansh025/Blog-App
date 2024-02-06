@@ -1,17 +1,21 @@
-import React, { useState } from 'react'
-import { PostForm } from '../components'
-import { useSelector } from 'react-redux'
+import React, { useState } from "react";
+import { PostForm } from "../components";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 function EditPost() {
-  // const [userPost, setUserPost] = useState({})
-  const userPost = useSelector((state)=>state.userPost)
-  if(userPost =={})
-    return <p>Loading</p>
-  return (
-    <div>
-      <PostForm oldPostData={userPost}/>
-    </div>
-  )
+  const navigate = useNavigate()
+  const userPost = useSelector((state) => state.userPost);
+  if (userPost.$id)
+    return (
+      <div>
+        <PostForm oldPostData={userPost} />
+      </div>
+    );
+  else {
+    navigate('/posts')
+  }
 }
 
-export default EditPost
+export default EditPost;

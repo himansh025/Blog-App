@@ -38,21 +38,22 @@ class AppwriteService{
                 )
                 }
             } catch (error) {
+                await this.deleteImage(postImageData.$id)
                 console.log("Error : Errow while creating post :: ", error)
+                return error.message
             }
         } catch (error) {
-            console.log("Error : Error while creating account :: ", error)
+            console.log("Error : Error while uploading image :: ", error)
         }
     }
 
     //updatePost
-    async updatePost(slug, imageFile, {title, content, isPublic, postImage, userID, userName}){
+    async updatePost(slug, imageFile, {title, content, isPublic, postImage}){
 
         if(imageFile){
             await this.deleteImage(postImage)
             postImage = await this.uploadImage(imageFile)
         }
-
         try {
             return await this.database.updateDocument(
                 APPWRITE_DB_ID,
@@ -62,16 +63,12 @@ class AppwriteService{
                     title, 
                     content, 
                     isPublic, 
-                    postImage, 
-                    userID, 
+                    postImage: postImage.$id, 
                 }
             )
         } catch (error) {
-            console.log("Error : Error while creating account :: ", error)
+            console.log("Error : Error while updating post :: ", error)
         }
-        
-
-
         
     }
 
@@ -139,9 +136,9 @@ class AppwriteService{
     }
 
     //get preview image
-    getImage(fileID){
+    async getImage(fileID){
         try {
-            return this.bucket.getFilePreview(
+            return await this.bucket.getFilePreview(
                 APPWRITE_BUCKET_ID,
                 fileID
             )
