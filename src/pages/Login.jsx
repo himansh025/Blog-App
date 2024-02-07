@@ -16,8 +16,11 @@ function Login() {
   const submit = async(data) =>{
     try {
         const userData = await authService.loginUser(data)
+        console.log(userData)
         if(userData){
-          let userPosts = await appwriteService.getPosts(userData.$id)
+          let userPosts = await appwriteService.getPosts(userData.userId)
+          console.log("if statement ran!!")
+          console.log(userPosts)
           userPosts = userPosts.documents
           dispatch(login({userData, userPosts}))
         }

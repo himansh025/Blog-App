@@ -7,10 +7,10 @@ const appSlice = createSlice({
         isAuth : false,
         userData : null,
         userPosts : [],
-        userPost : {},
+        userPost : null,
         loginTried : false,
         publicPosts : [],
-        publicUserPost : {}
+        publicUserPost : null
     },
 
     reducers: {
@@ -21,13 +21,12 @@ const appSlice = createSlice({
             state.isAuth = true
             state.userData = actions.payload.userData
             state.userPosts = actions.payload.userPosts
-            state.userPost = {}
         },
         logout : (state)=>{
             state.isAuth = false
             state.userData = null
             state.userPosts = []
-            state.userPost = {}
+            state.userPost = null
         },
         updateUserPosts : (state, actions) =>{
             state.userPosts = state.userPosts.map(userPost=>userPost.$id == actions.payload.$id ? actions.payload : userPost)
@@ -42,7 +41,13 @@ const appSlice = createSlice({
             state.userPost = state.userPosts.filter(userPost => userPost.$id === actions.payload)[0]
         },
         setPublicPosts : (state, actions) =>{
-            state.publicPosts = actions.payload
+            state.publicPosts = actions.payload.filter(publicPost=>publicPost.isPublic ==true)
+        },
+        updatePublicPosts : (state, actions)=>{
+            if(actions.payload.isPublic)
+                state.publicPosts = [...state.publicPosts, actions.payload]
+            else
+                state.publicPosts = state.publicPosts.filter(publicPost=>publicPost.$id != actions.payload.$id)
         },
         setPublicUserPost : (state, actions) =>{
             state.publicUserPost = state.publicPosts.filter(publicPost =>publicPost.$id==actions.payload)[0]
@@ -50,6 +55,6 @@ const appSlice = createSlice({
     }
 })
 
-export const {getPublicPosts, login, logout, addUserPosts, deleteUserPost, setUserPost, updateUserPosts, triedLogin, setPublicPosts, setPublicUserPost} = appSlice.actions
+export const {getPublicPosts, login, logout, addUserPosts, deleteUserPost, setUserPost, updateUserPosts, triedLogin, setPublicPosts, setPublicUserPost, updatePublicPosts} = appSlice.actions
 
 export default appSlice.reducer

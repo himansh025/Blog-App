@@ -7,13 +7,15 @@ import Button from "./button/Button";
 import {
   deleteUserPost,
   setUserPost,
-  updateUserPosts,
 } from "../store/appSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-function PostCard({ title, postImage, postID }) {
+
+function PostCard({ title, postImage, postID}) {
+  const location = useLocation().pathname == '/'
+  console.log(location)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -42,15 +44,15 @@ function PostCard({ title, postImage, postID }) {
           alt={title}
           className="w-full h-48 object-cover"
         />
-        <div className="px-6 py-4">
-          <div className="font-semibold text-xl mb-2">{title}</div>
+        <div className="px-6 py-4 text-center">
+          <div className="font-semibold text-xl mb-2 font-['Comic_Sans_MS']">{title}</div>
         </div>
       </Link>
 
-      <button onClick={deleteHandler} className="absolute top-0 right-0 p-2">
+      <button onClick={deleteHandler} className={`absolute top-0 right-0 p-2 ${location && 'hidden'}`}>
         <AiOutlineCloseCircle size={22}/>
       </button>
-      <button onClick={editHandler} className="absolute  bottom-0 right-0 p-2">
+      <button onClick={editHandler} className={`absolute  bottom-0 right-0 p-2 ${location && 'hidden'}`}>
         <AiFillEdit size={22}/>
       </button>
     </div>

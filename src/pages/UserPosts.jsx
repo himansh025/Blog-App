@@ -24,7 +24,7 @@ function UserPosts() {
       <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
         <h2 className="text-2xl font-bold mb-4">No Posts</h2>
         <p className="text-gray-700 mb-4">
-          Oops! There are no posts have been published.
+          Oops! You have not published any post.
         </p>
         <p className="text-gray-500">
           Create a fresh post{" "}

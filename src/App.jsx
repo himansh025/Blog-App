@@ -19,10 +19,8 @@ function App() {
         userPosts = userPosts.documents;
         dispatch(login({ userData, userPosts }));
       }
-      else{
-          const publicPosts = await appwriteService.getPosts()
-          dispatch(setPublicPosts(publicPosts.documents))
-      }
+      const publicPosts = await appwriteService.getPosts()
+      dispatch(setPublicPosts(publicPosts.documents))
       dispatch(triedLogin());
     };
     fetchData();

@@ -2,6 +2,7 @@ import React from 'react'
 
 function Input({
     label='',
+    className='',
     bgColor='',
     width='',
     textColor='',
@@ -10,11 +11,11 @@ function Input({
     ...props
 }, ref) {
   return (
-    <div>
+    <div className='w-full'>
        {
         label && <label className='block text-sm font-semibold text-gray-600'>{label} : </label>
        }
-       <input type={type} ref={ref} placeholder={placeholder} className={`${bgColor} ${width} ${textColor} p-2 rounded-md border border-gray-300 focus:outline-none focus:ring focus:border-blue-500 my-3`} {...props}/>
+       <input type={type} minLength={5} ref={ref} placeholder={placeholder} className={`${bgColor} ${width} ${textColor} ${className} p-2 rounded-md border border-gray-300 focus:outline-none focus:ring focus:border-blue-500 my-3`} {...props}/>
     </div>
   )
 }

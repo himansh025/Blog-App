@@ -52,7 +52,7 @@ function Header() {
   return (
     <nav className='mt-3 p-4 rounded-2xl flex justify-between items-center shadow-2xl'>
             <div className='text-black hover:text-gray-600 text-2xl'>
-                <Link to='/'>Logo</Link>
+                <Link to='/'>Blogs4U</Link>
             </div>
         <ul className='flex justify-center gap-5 items-center'>
             {

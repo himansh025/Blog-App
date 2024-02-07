@@ -27,9 +27,9 @@ const router = createBrowserRouter([
       {
         path: "create",
         element: (
-          <Protected >
+          <Protected>
             <CreatePost />
-          </Protected>
+          </Protected> 
         ),
       },
       {
