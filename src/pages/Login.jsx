@@ -15,10 +15,11 @@ function Login() {
   const { handleSubmit, register} = useForm();
   const submit = async(data) =>{
     try {
-        const userData = await authService.loginUser(data)
+        await authService.loginUser(data)
+        const userData = await authService.checkLoggedAccount()
         console.log(userData)
         if(userData){
-          let userPosts = await appwriteService.getPosts(userData.userId)
+          let userPosts = await appwriteService.getPosts(userData.$id)
           console.log("if statement ran!!")
           console.log(userPosts)
           userPosts = userPosts.documents

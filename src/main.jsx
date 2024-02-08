@@ -35,9 +35,15 @@ const router = createBrowserRouter([
       {
         path: "post/:slug",
         element: (
-          // <Protected >
+          <Protected >
             <Post/>
-          // </Protected>
+          </Protected>
+        ),
+      },
+      {
+        path: "publicpost/:slug",
+        element: (
+            <Post/>
         ),
       },
       {

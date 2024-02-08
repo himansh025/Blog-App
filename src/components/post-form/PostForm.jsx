@@ -79,7 +79,9 @@ function PostForm({ oldPostData = "" }) {
       appwriteService
         .createPost(data)
         .then((userPost) => {
+          console.log(userPost, 'userPOst data here')
           if (typeof userPost == "string") {
+            console.log(userPost, 'inpose if string')
             toast.error(userPost);
             setLoading(false);
           } else {
@@ -94,6 +96,7 @@ function PostForm({ oldPostData = "" }) {
         })
         .catch((error) => {
           toast.error(error.message);
+          console.log(error)
         });
     }
   };
@@ -150,6 +153,7 @@ function PostForm({ oldPostData = "" }) {
         )}
         <div className="flex gap-6">
           <select className="p-2 rounded-xl my-2 " {...register("isPublic")}>
+            <option disabled value={true}>Select Visiblity</option>
             <option value={true}>Public</option>
             <option value={false}>Private</option>
           </select>

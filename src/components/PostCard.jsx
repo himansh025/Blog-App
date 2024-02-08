@@ -1,9 +1,7 @@
 import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { AiFillCloseCircle } from "react-icons/ai";
 import React, { useState } from "react";
 import appwriteService from "../appwrite/config";
-import Button from "./button/Button";
 import {
   deleteUserPost,
   setUserPost,
@@ -15,7 +13,6 @@ import toast from "react-hot-toast";
 
 function PostCard({ title, postImage, postID}) {
   const location = useLocation().pathname == '/'
-  console.log(location)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -36,7 +33,7 @@ function PostCard({ title, postImage, postID}) {
   return (
     <div className="shadow-2xl rounded-2xl overflow-hidden relative w-[300px] mt-6">
       <Link
-        to={`/post/${postID}`}
+        to={`/${location? 'publicpost' : 'post'}/${postID}`}
         className="max-w-sm w-60 rounded overflow-hidden shadow-lg"
       >
         <img

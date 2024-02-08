@@ -14,8 +14,9 @@ function Signup() {
   const {handleSubmit, register} = useForm()
   const submit = async(data) => {
     try {
-      const userData = await authService.createUser(data)
-      dispatch(login({userData}))
+      await authService.createUser(data)
+      const userData = await authService.checkLoggedAccount()
+      dispatch(login({userData, userPosts: []}))
       navigate('/')
     } catch (error) {
       toast.error(error.message, {position: "bottom-center"})
