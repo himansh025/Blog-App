@@ -8,8 +8,8 @@ function AllPosts() {
     const allPosts = useSelector(state=>state.publicPosts)
     if (allPosts.length>0)
       return (
-    <div>
-      <h1 className="font-semibold text-3xl my-8 font-['Comic_Sans_MS'] text-center" >Public Posts</h1>
+    <div className='my-5'>
+      <h1 className="font-semibold text-3xl my-4 font-['Comic_Sans_MS'] text-center" >Public Posts</h1>
       <div className="flex flex-wrap gap-2 justify-center">
         {
           allPosts.map(post=><PostCard key={post.$createdAt} title={post.title} postID={post.$id} postImage={post.postImage} isPublic={true}/>)
