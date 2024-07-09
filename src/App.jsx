@@ -13,18 +13,33 @@ function App() {
   // to check the logged user and userPosts on reload
   useEffect(() => {
     const fetchData = async () => {
-      const userData = await authService.checkLoggedAccount();
-      if (userData) {
-        let userPosts = await appwriteService.getPosts(userData.$id);
-        userPosts = userPosts.documents;
-        dispatch(login({ userData, userPosts }));
+      try {
+        const userData = await authService.checkLoggedAccount();
+        if (userData) {
+          console.log(userData);
+          try {
+            let userPosts = await appwriteService.getPosts(userData.$id);
+            dispatch(login({ userData, userPosts: userPosts.documents || [] }));
+          } catch (postError) {
+            console.error("Error while getting user posts:", postError);
+            dispatch(login({ userData, userPosts: [] }));
+          }
+        }
+        try {
+          const publicPosts = await appwriteService.getPosts();
+          dispatch(setPublicPosts(publicPosts.documents || []));
+        } catch (publicPostError) {
+          console.error("Error while getting public posts:", publicPostError);
+          dispatch(setPublicPosts([]));
+        }
+      } catch (authError) {
+        console.error("Error while checking logged-in user:", authError);
+      } finally {
+        dispatch(triedLogin());
       }
-      const publicPosts = await appwriteService.getPosts()
-      dispatch(setPublicPosts(publicPosts.documents))
-      dispatch(triedLogin());
     };
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   const loginTried = useSelector((state) => state.loginTried);
 

@@ -56,17 +56,18 @@ function PostForm({ oldPostData = "" }) {
     const imageFile = formData.imageFile[0] || null;
     const isPublic = formData.isPublic === "true" ? true : false;
     const data = { ...formData, userName, userID, isPublic, imageFile };
-
+  
+    console.log("Data to be sent:", data);  // Log the data being sent
+  
     if (oldPostData) {
+      console.log(data);
       console.log(data.isPublic, typeof data.isPublic);
       data.postImage = oldPostData.postImage;
       appwriteService
         .updatePost(oldPostData.$id, imageFile, data)
         .then((userPost) => {
           dispatch(updateUserPosts(userPost));
-
           dispatch(updatePublicPosts(userPost));
-
           toast.success("Post Updated");
           navigate(`/post/${formData.slug}`);
         })
@@ -79,9 +80,9 @@ function PostForm({ oldPostData = "" }) {
       appwriteService
         .createPost(data)
         .then((userPost) => {
-          console.log(userPost, 'userPOst data here')
-          if (typeof userPost == "string") {
-            console.log(userPost, 'inpose if string')
+          console.log(userPost, 'userPost data here');
+          if (typeof userPost === "string") {  // Corrected type check
+            console.log(userPost, 'impose if string');
             toast.error(userPost);
             setLoading(false);
           } else {
@@ -96,10 +97,11 @@ function PostForm({ oldPostData = "" }) {
         })
         .catch((error) => {
           toast.error(error.message);
-          console.log(error)
+          console.log(error);
         });
     }
   };
+  
 
   return (
     <div>

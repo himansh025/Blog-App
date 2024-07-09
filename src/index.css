@@ -7,7 +7,9 @@
     list-style-type: number;
     padding-left: 10px
 }
-
+body{
+    background-color: rgb(138, 135, 135)
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
